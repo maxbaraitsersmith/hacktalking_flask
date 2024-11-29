@@ -1,5 +1,3 @@
-from grandcypher import GrandCypher
-
 def addDatum(datum, globals, graph, history):
     nodeID = globals['counter']
 
@@ -19,8 +17,6 @@ def query(graph):
         RETURN a.label
     """
 
-    cypher = GrandCypher(graph)
-    output = cypher.run(query)
     return output
     
 config = {
