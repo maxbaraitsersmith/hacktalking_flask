@@ -1,0 +1,68 @@
+:root {
+  --primaryCol: white;
+  --backgroundCol: blue;
+  --fontSize: 50px;
+  --lineHeight: 90px;
+  --borderWidth: 5px;
+
+  --input-color: var(--primaryCol);
+  --tagify-dd-color-primary: transparent !important;
+  --tagify-dd-bg-color: transparent !important;
+}
+
+@font-face {
+  font-family: futuralight;
+  src: url('../fonts/futura light bt.ttf');
+}
+@font-face {
+  font-family: futurabold;
+  src: url('../fonts/futura medium bt.ttf');
+}
+
+
+body {
+    font-family: futuralight;
+    font-size: var(--fontSize);
+    line-height: var(--lineHeight);
+    width: 100%;
+    padding:40px;
+    margin:0;
+    box-sizing: border-box;
+    background:var(--backgroundCol);
+    color: var(--primaryCol);
+}
+
+.tagify__dropdown {
+    border: var(--borderWidth) solid var(--primaryCol);
+    box-sizing: border-box;
+}
+
+.tagify__dropdown > *{
+    transition: none !important;
+    padding-bottom:1.5rem;
+}
+
+.tagify-input {
+  border: 0;
+
+}
+.tagify {
+    width: 100%;
+}
+.tagify__tag {
+    display: none !important;
+}
+.tagify-input .tagify__input {
+  border: var(--borderWidth) solid var(--primaryCol);
+  margin:0;
+}
+
+.tagify-input .tagify__input:hover {
+  border-color: var(--primaryCol); }
+
+.tagify-input.tagify--focus .tagify__input {
+  transition: 0s;
+  border-color: var(--primaryCol); }
+
+.tagify-input.tagify--focus, .tagify-input.tagify {
+  border: none; }
