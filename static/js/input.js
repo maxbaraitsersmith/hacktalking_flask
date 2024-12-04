@@ -30,7 +30,7 @@ function isANumber(str) { //check if string is a number
 function submit(value) {
 	var datum = {
 		"type": "input",
-		"value": value,
+		"text": value,
 		"timestamp": new Date(Date.now()).toISOString(),
 	};
 	postAjax('/addDatum',JSON.stringify(datum),catchError);

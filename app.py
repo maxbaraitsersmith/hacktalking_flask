@@ -4,14 +4,12 @@ import random
 import json
 from config import config
 
-from gremlin_python import statics
-from gremlin_python.structure.graph import Graph
-from gremlin_python.process.graph_traversal import __
-from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
 from gremlin_python.process.anonymous_traversal import traversal
+from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
 import gremlin_python.driver.serializer as serializer
 
-connection = DriverRemoteConnection('ws://dc-max.local:8182/gremlin', 'g', message_serializer=serializer.GraphSONSerializersV3d0()) # The connection should be closed on shut down to close open connections with connection.close()
+db_url = 'ws://localhost:8182/gremlin' #'ws://dc-max.local:8182/gremlin'
+connection = DriverRemoteConnection(db_url, 'g', message_serializer=serializer.GraphSONSerializersV3d0()) # The connection should be closed on shut down to close open connections with connection.close()
 g = traversal().with_remote(connection) #traversal().withRemote(connection)
 g.V().drop().iterate()
 
