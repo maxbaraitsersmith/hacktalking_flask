@@ -45,6 +45,12 @@ def addDatum():
     data.append(datum)
     return {}
 
+@app.route("/startRecordingTimestamp", methods=['POST'])
+def startRecordingTimestamp():
+    datum = request.get_json()['ts']
+    config['globals']['startRecordingTimestamp'] = datum
+    return {}
+
 @app.route("/getInputSuggestions", methods=['POST'])
 def getInputSuggestions():
     return jsonify(config['input-suggestions'])
