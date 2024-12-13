@@ -1,6 +1,3 @@
-import pydub
-import pyaudio
-from pydub.playback import play
 
 def addDatum(datum, globals, history, g):
 
@@ -43,61 +40,40 @@ def addDatum(datum, globals, history, g):
 
             annotations = list(set(annotations)) #remove duplicates
 
-            chunkNode = g.addV('chunk')\
-            .property('start',previousWhisperDatum['start'])\
-            .property('end',previousWhisperDatum['end'])\
-            .property('text',previousWhisperDatum['text'])\
-            .property('annotations', " ".join(annotations) )\
-            .next()
+            t = g.addV('chunk')\
+            .property('counter', globals['counter'])\
+            .property('start1',float(previousWhisperDatum['start']))\
+            .property('end1',float(previousWhisperDatum['end']))\
+            .property('text',previousWhisperDatum['text'])
+
+            for annotation in annotations:
+                t = t.property('annotation', annotation)
+            chunkNode = t.next()
+
+            if globals['counter'] != 0: #add edge to previous node
+                g.V().has("counter", globals['counter']-1).as_("a").addE('.').from_("a").to(chunkNode).next()
+
+            #add link to all other nodes with same annotation.
+            for annotation in annotations:
+                g.V().has("annotation",annotation).as_("a").addE(annotation).from_("a").to(chunkNode).iterate()
+
+            globals['counter'] += 1
+
+
+            #add connection to next chunk
+            #add links to other annotated nodes
 
     return globals
 
-def query(data, g):
-    if (data['label'] == "chunk"):
-        
-        start = float( data['properties']['start'][0]['value'] )
-        end = float( data['properties']['end'][0]['value'] )
-        playAudio(start,end)
-
 config = {
     "globals": {
-        "startRecordingTimestamp": 0
+        "startRecordingTimestamp": 0,
+        "counter": 0
     },
     "input-suggestions": [
-        'Max',
-        'Lilli',
-        'Pietro',
-        'Maryam',
-        'This is cool This is not cool',
     ],
     "addDatum": addDatum,
-    "query": query
 }
-
-def playAudio(start, end): #in seconds
-    # startOffset = start % 1    
-    # sound = readAudioChunk(start)
-    # sound = sound[startOffset*1000:]
-
-    # second = math.floor(start)+1
-    # while True:
-    #     print(second)
-    #     chunk = readAudioChunk(second)
-    #     if end-second < 1:
-    #         if end-second > 0:
-    #             sound += chunk [:(end-second)*1000]
-    #         break
-    #     else:
-    #         sound += chunk
-    #         second += 1
-
-    # play(sound)
-
-    return {}
-
-
-
-
 
 # def addDatum(datum, globals, history, g):
 #     #
