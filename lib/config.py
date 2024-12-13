@@ -61,22 +61,22 @@ config = {
 }
 
 def playAudio(start, end): #in seconds
-    startOffset = start % 1    
-    sound = readAudioChunk(start)
-    sound = sound[startOffset*1000:]
+    # startOffset = start % 1    
+    # sound = readAudioChunk(start)
+    # sound = sound[startOffset*1000:]
 
-    second = math.floor(start)+1
-    while True:
-        print(second)
-        chunk = readAudioChunk(second)
-        if end-second < 1:
-            if end-second > 0:
-                sound += chunk [:(end-second)*1000]
-            break
-        else:
-            sound += chunk
-            second += 1
+    # second = math.floor(start)+1
+    # while True:
+    #     print(second)
+    #     chunk = readAudioChunk(second)
+    #     if end-second < 1:
+    #         if end-second > 0:
+    #             sound += chunk [:(end-second)*1000]
+    #         break
+    #     else:
+    #         sound += chunk
+    #         second += 1
 
-    play(sound)
+    # play(sound)
 
     return {}

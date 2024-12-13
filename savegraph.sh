@@ -5,4 +5,4 @@ mkdir data/$timestamp
 mkdir data/$timestamp/chunks
 mv ../hacktalking_whisper/chunks/* data/$timestamp/chunks
 python lib/savegraph.py $timestamp
-scp misunderstandings@dc-max.local:/home/misunderstandings/Desktop/max/shared_understandings/exports/$timestamp.xml data/$timestamp/graph.xml
+#scp misunderstandings@dc-max.local:/home/misunderstandings/Desktop/max/shared_understandings/exports/$timestamp.xml data/$timestamp/graph.xml
