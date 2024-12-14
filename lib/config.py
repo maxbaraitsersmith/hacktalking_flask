@@ -6,6 +6,8 @@ def addDatum(datum, globals, history, g):
     # Then creates chunk node connected to the previous chunk and all other chunks with the same annotation
     #
 
+    print("Adding datum: "+datum['type'])
+
     if datum['type'] == 'whisper':
         annotations = []
         historyLen = len(history)
@@ -42,8 +44,8 @@ def addDatum(datum, globals, history, g):
 
             t = g.addV('chunk')\
             .property('counter', globals['counter'])\
-            .property('start1',float(previousWhisperDatum['start']))\
-            .property('end1',float(previousWhisperDatum['end']))\
+            .property('start',float(previousWhisperDatum['start']))\
+            .property('end',float(previousWhisperDatum['end']))\
             .property('text',previousWhisperDatum['text'])
 
             for annotation in annotations:

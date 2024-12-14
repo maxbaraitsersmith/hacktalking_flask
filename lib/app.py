@@ -8,6 +8,7 @@ from config import config
 import math
 import datetime
 import time
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from gremlin_python.process.anonymous_traversal import traversal
 from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
@@ -19,14 +20,12 @@ from gremlin_python.process.traversal import T
 import pydub
 import pyaudio
 from pydub.playback import play
-import math
 
-db_url = 'ws://localhost:8182/gremlin'
-#db_url = 'ws://dc-max.local:8182/gremlin'
+#db_url = 'ws://localhost:8182/gremlin'
+db_url = 'ws://dc-max.local:8182/gremlin'
 if db_url:
     connection = DriverRemoteConnection(db_url, 'g', message_serializer=serializer.GraphSONSerializersV3d0())
     g = traversal().with_remote(connection)
-    #g.V().drop().iterate()
 
     client = Client(db_url,'g')
     client.submit("""
@@ -42,7 +41,7 @@ CORS(app)
 
 data = []
 randomWalking = False
-
+addDatumQueue = []
 initialised = False
 
 @app.route("/")
@@ -55,10 +54,17 @@ def renderAudio():
 
 @app.route("/addDatum", methods=['POST'])
 def addDatum():
+    global addDatumQueue
     datum = request.get_json()
-    config['globals'] = config['addDatum'](datum, config['globals'], data, g)
-    data.append(datum)
+    addDatumQueue.append(datum)
     return {}
+
+def iterateAddDatumQueue():
+    global addDatumQueue
+    if len(addDatumQueue) > 0:
+        datum = addDatumQueue.pop()
+        config['globals'] = config['addDatum'](datum, config['globals'], data, g)
+        data.append(datum)
 
 @app.route("/startRecordingTimestamp", methods=['POST'])
 def startRecordingTimestamp():
@@ -95,7 +101,7 @@ def playChunk(data):
         audioChunksPath = 'data/'+data['timestamp']+'/chunks'
     else:
         audioChunksPath = '../hacktalking_whisper/chunks'
-    playAudio(data['start1'],data['end1'], audioChunksPath)
+    playAudio(data['start'],data['end'], audioChunksPath)
 
 def readAudioChunk(second,audioChunksPath):
     second = int(math.floor(second))
@@ -131,7 +137,12 @@ def query():
 
 
 def initialise():
-    print("Initialised")
+    print("Initialising")
+
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(iterateAddDatumQueue, 'interval', seconds=0.5)
+    scheduler.start()
+
 
 @app.before_request
 def do_something_whenever_a_request_comes_in():
